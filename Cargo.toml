@@ -1,0 +1,22 @@
+[package]
+
+name = "interpolation"
+version = "0.0.0"
+authors = [
+    "bvssvni <bvssvni@gmail.com>",
+    "Coeuvre <coeuvre@gmail.com>",
+    "leonkunert <info@leonkunert.de>",
+    "gmorenz",
+    "Potpourri",
+    "TyOverby <ty@pre-alpha.com>"]
+keywords = ["graphics", "interpolation", "animation", "piston"]
+description = "A library for interpolation"
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/pistondevelopers/interpolation.git"
+homepage = "https://github.com/pistondevelopers/interpolation"
+
+[lib]
+
+name = "interpolation"
+path = "./src/lib.rs"
