@@ -1,4 +1,5 @@
 #![deny(missing_docs)]
+#![feature(macro_rules)]
 
 //! Interpolation algorithms.
 //!
