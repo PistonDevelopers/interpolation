@@ -11,6 +11,8 @@
 //! The choice of interpolation algorithm depends often 
 //! on the circumstances where it used.
 
+pub mod ease;
+
 /// Performs linear interpolation.
 /// A linear interpolation consists of two states 'a' and 'b'.
 /// The 't' variable is a factor between 0 and 1 that 
