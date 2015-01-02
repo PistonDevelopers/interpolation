@@ -8,7 +8,9 @@ authors = [
     "leonkunert <info@leonkunert.de>",
     "gmorenz",
     "Potpourri",
-    "TyOverby <ty@pre-alpha.com>"]
+    "TyOverby <ty@pre-alpha.com>",
+    "zummenix"
+]
 keywords = ["graphics", "interpolation", "animation", "piston"]
 description = "A library for interpolation"
 license = "MIT"
