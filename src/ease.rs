@@ -10,90 +10,48 @@ use std::num::{
     FloatMath,
 };
 
-pub use ease::EaseFunction::{
-    EaseQuadraticIn,
-    EaseQuadraticOut,
-    EaseQuadraticInOut,
-
-    EaseCubicIn,
-    EaseCubicOut,
-    EaseCubicInOut,
-
-    EaseQuarticIn,
-    EaseQuarticOut,
-    EaseQuarticInOut,
-
-    EaseQuinticIn,
-    EaseQuinticOut,
-    EaseQuinticInOut,
-
-    EaseSineIn,
-    EaseSineOut,
-    EaseSineInOut,
-
-    EaseCircularIn,
-    EaseCircularOut,
-    EaseCircularInOut,
-
-    EaseExponentialIn,
-    EaseExponentialOut,
-    EaseExponentialInOut,
-
-    EaseElasticIn,
-    EaseElasticOut,
-    EaseElasticInOut,
-
-    EaseBackIn,
-    EaseBackOut,
-    EaseBackInOut,
-
-    EaseBounceIn,
-    EaseBounceOut,
-    EaseBounceInOut,
-};
-
 #[allow(missing_docs)]
 #[deriving(Copy, Clone, PartialEq)]
 pub enum EaseFunction {
-    EaseQuadraticIn,
-    EaseQuadraticOut,
-    EaseQuadraticInOut,
+    QuadraticIn,
+    QuadraticOut,
+    QuadraticInOut,
 
-    EaseCubicIn,
-    EaseCubicOut,
-    EaseCubicInOut,
+    CubicIn,
+    CubicOut,
+    CubicInOut,
 
-    EaseQuarticIn,
-    EaseQuarticOut,
-    EaseQuarticInOut,
+    QuarticIn,
+    QuarticOut,
+    QuarticInOut,
 
-    EaseQuinticIn,
-    EaseQuinticOut,
-    EaseQuinticInOut,
+    QuinticIn,
+    QuinticOut,
+    QuinticInOut,
 
-    EaseSineIn,
-    EaseSineOut,
-    EaseSineInOut,
+    SineIn,
+    SineOut,
+    SineInOut,
 
-    EaseCircularIn,
-    EaseCircularOut,
-    EaseCircularInOut,
+    CircularIn,
+    CircularOut,
+    CircularInOut,
 
-    EaseExponentialIn,
-    EaseExponentialOut,
-    EaseExponentialInOut,
+    ExponentialIn,
+    ExponentialOut,
+    ExponentialInOut,
 
-    EaseElasticIn,
-    EaseElasticOut,
-    EaseElasticInOut,
+    ElasticIn,
+    ElasticOut,
+    ElasticInOut,
 
-    EaseBackIn,
-    EaseBackOut,
-    EaseBackInOut,
+    BackIn,
+    BackOut,
+    BackInOut,
 
-    EaseBounceIn,
-    EaseBounceOut,
-    EaseBounceInOut,
+    BounceIn,
+    BounceOut,
+    BounceInOut,
 }
 
 impl EaseFunction {
@@ -103,45 +61,45 @@ impl EaseFunction {
             T: Float + FromPrimitive + FloatMath
     {
         match self {
-            EaseQuadraticIn => quadratic_in(p),
-            EaseQuadraticOut => quadratic_out(p),
-            EaseQuadraticInOut => quadratic_in_out(p),
+            EaseFunction::QuadraticIn => quadratic_in(p),
+            EaseFunction::QuadraticOut => quadratic_out(p),
+            EaseFunction::QuadraticInOut => quadratic_in_out(p),
 
-            EaseCubicIn => cubic_in(p),
-            EaseCubicOut => cubic_out(p),
-            EaseCubicInOut => cubic_in_out(p),
+            EaseFunction::CubicIn => cubic_in(p),
+            EaseFunction::CubicOut => cubic_out(p),
+            EaseFunction::CubicInOut => cubic_in_out(p),
 
-            EaseQuarticIn => quartic_in(p),
-            EaseQuarticOut => quartic_out(p),
-            EaseQuarticInOut => quartic_in_out(p),
+            EaseFunction::QuarticIn => quartic_in(p),
+            EaseFunction::QuarticOut => quartic_out(p),
+            EaseFunction::QuarticInOut => quartic_in_out(p),
 
-            EaseQuinticIn => quintic_in(p),
-            EaseQuinticOut => quintic_out(p),
-            EaseQuinticInOut => quintic_in_out(p),
+            EaseFunction::QuinticIn => quintic_in(p),
+            EaseFunction::QuinticOut => quintic_out(p),
+            EaseFunction::QuinticInOut => quintic_in_out(p),
 
-            EaseSineIn => sine_in(p),
-            EaseSineOut => sine_out(p),
-            EaseSineInOut => sine_in_out(p),
+            EaseFunction::SineIn => sine_in(p),
+            EaseFunction::SineOut => sine_out(p),
+            EaseFunction::SineInOut => sine_in_out(p),
 
-            EaseCircularIn => circular_in(p),
-            EaseCircularOut => circular_out(p),
-            EaseCircularInOut => circular_in_out(p),
+            EaseFunction::CircularIn => circular_in(p),
+            EaseFunction::CircularOut => circular_out(p),
+            EaseFunction::CircularInOut => circular_in_out(p),
 
-            EaseExponentialIn => exponential_in(p),
-            EaseExponentialOut => exponential_out(p),
-            EaseExponentialInOut => exponential_in_out(p),
+            EaseFunction::ExponentialIn => exponential_in(p),
+            EaseFunction::ExponentialOut => exponential_out(p),
+            EaseFunction::ExponentialInOut => exponential_in_out(p),
 
-            EaseElasticIn => elastic_in(p),
-            EaseElasticOut => elastic_out(p),
-            EaseElasticInOut => elastic_in_out(p),
+            EaseFunction::ElasticIn => elastic_in(p),
+            EaseFunction::ElasticOut => elastic_out(p),
+            EaseFunction::ElasticInOut => elastic_in_out(p),
 
-            EaseBackIn => back_in(p),
-            EaseBackOut => back_out(p),
-            EaseBackInOut => back_in_out(p),
+            EaseFunction::BackIn => back_in(p),
+            EaseFunction::BackOut => back_out(p),
+            EaseFunction::BackInOut => back_in_out(p),
 
-            EaseBounceIn => bounce_in(p),
-            EaseBounceOut => bounce_out(p),
-            EaseBounceInOut => bounce_in_out(p),
+            EaseFunction::BounceIn => bounce_in(p),
+            EaseFunction::BounceOut => bounce_out(p),
+            EaseFunction::BounceInOut => bounce_in_out(p),
         }
     }
 }
