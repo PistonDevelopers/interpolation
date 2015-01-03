@@ -12,6 +12,8 @@
 //! The choice of interpolation algorithm depends often 
 //! on the circumstances where it used.
 
+use std::ops::{ Add, Mul, Sub };
+
 pub mod ease;
 
 /// Performs linear interpolation.

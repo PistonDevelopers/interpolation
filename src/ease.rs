@@ -8,10 +8,11 @@ use std::f64::consts::{
 use std::num::{
     Float,
     FloatMath,
+    FromPrimitive,
 };
 
 #[allow(missing_docs)]
-#[deriving(Copy, Clone, PartialEq)]
+#[derive(Copy, Clone, PartialEq)]
 pub enum EaseFunction {
     QuadraticIn,
     QuadraticOut,
