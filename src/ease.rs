@@ -7,7 +7,6 @@ use std::f64::consts::{
 };
 use std::num::{
     Float,
-    FloatMath,
     FromPrimitive,
 };
 
@@ -59,7 +58,7 @@ impl EaseFunction {
     /// Calculate the eased value, normalized
     pub fn calc<T>(self, p: T) -> T
         where
-            T: Float + FromPrimitive + FloatMath
+            T: Float + FromPrimitive
     {
         match self {
             EaseFunction::QuadraticIn => quadratic_in(p),
@@ -275,7 +274,7 @@ pub fn quintic_in_out<T>(mut p: T) -> T
 /// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
 pub fn sine_in<T>(mut p: T) -> T
     where
-        T: Float + FromPrimitive + FloatMath
+        T: Float + FromPrimitive
 {
     p = normalized(p);
     let _1: T = Float::one();
@@ -287,7 +286,7 @@ pub fn sine_in<T>(mut p: T) -> T
 /// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
 pub fn sine_out<T>(mut p: T) -> T
     where
-        T: Float + FromPrimitive + FloatMath
+        T: Float + FromPrimitive
 {
     p = normalized(p);
     let _pi_2: T = FromPrimitive::from_f64(PI_2).unwrap();
@@ -298,7 +297,7 @@ pub fn sine_out<T>(mut p: T) -> T
 /// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
 pub fn sine_in_out<T>(mut p: T) -> T
     where
-        T: Float + FromPrimitive + FloatMath
+        T: Float + FromPrimitive
 {
     p = normalized(p);
     let _05: T = FromPrimitive::from_f64(0.5).unwrap();
@@ -414,7 +413,7 @@ pub fn exponential_in_out<T>(mut p: T) -> T
 /// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
 pub fn elastic_in<T>(mut p: T) -> T
     where
-        T: Float + FromPrimitive + FloatMath
+        T: Float + FromPrimitive
 {
     p = normalized(p);
     let _13: T = FromPrimitive::from_f64(13.0).unwrap();
@@ -429,7 +428,7 @@ pub fn elastic_in<T>(mut p: T) -> T
 /// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
 pub fn elastic_out<T>(mut p: T) -> T
     where
-        T: Float + FromPrimitive + FloatMath
+        T: Float + FromPrimitive
 {
     p = normalized(p);
     let _13: T = FromPrimitive::from_f64(13.0).unwrap();
@@ -444,7 +443,7 @@ pub fn elastic_out<T>(mut p: T) -> T
 /// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
 pub fn elastic_in_out<T>(mut p: T) -> T
     where
-        T: Float + FromPrimitive + FloatMath
+        T: Float + FromPrimitive
 {
     p = normalized(p);
     let _05: T = FromPrimitive::from_f64(0.5).unwrap();
@@ -465,7 +464,7 @@ pub fn elastic_in_out<T>(mut p: T) -> T
 /// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
 pub fn back_in<T>(mut p: T) -> T
     where
-        T: Float + FromPrimitive + FloatMath
+        T: Float + FromPrimitive
 {
     p = normalized(p);
     let _pi = FromPrimitive::from_f64(PI).unwrap();
@@ -476,7 +475,7 @@ pub fn back_in<T>(mut p: T) -> T
 /// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
 pub fn back_out<T>(mut p: T) -> T
     where
-        T: Float + FromPrimitive + FloatMath
+        T: Float + FromPrimitive
 {
     p = normalized(p);
     let _1: T = Float::one();
@@ -489,7 +488,7 @@ pub fn back_out<T>(mut p: T) -> T
 /// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
 pub fn back_in_out<T>(mut p: T) -> T
     where
-        T: Float + FromPrimitive + FloatMath
+        T: Float + FromPrimitive
 {
     p = normalized(p);
     let _05: T = FromPrimitive::from_f64(0.5).unwrap();
