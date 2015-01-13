@@ -1,13 +1,8 @@
 
 //! A module contains implementation of ease functions.
 
-use std::f64::consts::{
-    PI,
-    PI_2,
-};
 use std::num::{
     Float,
-    FromPrimitive,
 };
 
 #[allow(missing_docs)]
@@ -54,535 +49,343 @@ pub enum EaseFunction {
     BounceInOut,
 }
 
-impl EaseFunction {
+#[allow(missing_docs)]
+pub trait Ease {
     /// Calculate the eased value, normalized
-    pub fn calc<T>(self, p: T) -> T
-        where
-            T: Float + FromPrimitive
-    {
-        match self {
-            EaseFunction::QuadraticIn => quadratic_in(p),
-            EaseFunction::QuadraticOut => quadratic_out(p),
-            EaseFunction::QuadraticInOut => quadratic_in_out(p),
+    fn calc(self, f: EaseFunction) -> Self;
 
-            EaseFunction::CubicIn => cubic_in(p),
-            EaseFunction::CubicOut => cubic_out(p),
-            EaseFunction::CubicInOut => cubic_in_out(p),
+    fn quadratic_in(self) -> Self;
+    fn quadratic_out(self) -> Self;
+    fn quadratic_in_out(self) -> Self;
 
-            EaseFunction::QuarticIn => quartic_in(p),
-            EaseFunction::QuarticOut => quartic_out(p),
-            EaseFunction::QuarticInOut => quartic_in_out(p),
+    fn cubic_in(self) -> Self;
+    fn cubic_out(self) -> Self;
+    fn cubic_in_out(self) -> Self;
 
-            EaseFunction::QuinticIn => quintic_in(p),
-            EaseFunction::QuinticOut => quintic_out(p),
-            EaseFunction::QuinticInOut => quintic_in_out(p),
+    fn quartic_in(self) -> Self;
+    fn quartic_out(self) -> Self;
+    fn quartic_in_out(self) -> Self;
 
-            EaseFunction::SineIn => sine_in(p),
-            EaseFunction::SineOut => sine_out(p),
-            EaseFunction::SineInOut => sine_in_out(p),
+    fn quintic_in(self) -> Self;
+    fn quintic_out(self) -> Self;
+    fn quintic_in_out(self) -> Self;
 
-            EaseFunction::CircularIn => circular_in(p),
-            EaseFunction::CircularOut => circular_out(p),
-            EaseFunction::CircularInOut => circular_in_out(p),
+    fn sine_in(self) -> Self;
+    fn sine_out(self) -> Self;
+    fn sine_in_out(self) -> Self;
 
-            EaseFunction::ExponentialIn => exponential_in(p),
-            EaseFunction::ExponentialOut => exponential_out(p),
-            EaseFunction::ExponentialInOut => exponential_in_out(p),
+    fn circular_in(self) -> Self;
+    fn circular_out(self) -> Self;
+    fn circular_in_out(self) -> Self;
 
-            EaseFunction::ElasticIn => elastic_in(p),
-            EaseFunction::ElasticOut => elastic_out(p),
-            EaseFunction::ElasticInOut => elastic_in_out(p),
+    fn exponential_in(self) -> Self;
+    fn exponential_out(self) -> Self;
+    fn exponential_in_out(self) -> Self;
 
-            EaseFunction::BackIn => back_in(p),
-            EaseFunction::BackOut => back_out(p),
-            EaseFunction::BackInOut => back_in_out(p),
+    fn elastic_in(self) -> Self;
+    fn elastic_out(self) -> Self;
+    fn elastic_in_out(self) -> Self;
 
-            EaseFunction::BounceIn => bounce_in(p),
-            EaseFunction::BounceOut => bounce_out(p),
-            EaseFunction::BounceInOut => bounce_in_out(p),
+    fn back_in(self) -> Self;
+    fn back_out(self) -> Self;
+    fn back_in_out(self) -> Self;
+
+    fn bounce_in(self) -> Self;
+    fn bounce_out(self) -> Self;
+    fn bounce_in_out(self) -> Self;
+}
+
+macro_rules! impl_ease_trait_for {
+    ($T: ident) => (
+        impl Ease for $T {
+            fn calc(self, f: EaseFunction) -> Self {
+                match f {
+                    EaseFunction::QuadraticIn => self.quadratic_in(),
+                    EaseFunction::QuadraticOut => self.quadratic_out(),
+                    EaseFunction::QuadraticInOut => self.quadratic_in_out(),
+
+                    EaseFunction::CubicIn => self.cubic_in(),
+                    EaseFunction::CubicOut => self.cubic_out(),
+                    EaseFunction::CubicInOut => self.cubic_in_out(),
+
+                    EaseFunction::QuarticIn => self.quartic_in(),
+                    EaseFunction::QuarticOut => self.quartic_out(),
+                    EaseFunction::QuarticInOut => self.quartic_in_out(),
+
+                    EaseFunction::QuinticIn => self.quintic_in(),
+                    EaseFunction::QuinticOut => self.quintic_out(),
+                    EaseFunction::QuinticInOut => self.quintic_in_out(),
+
+                    EaseFunction::SineIn => self.sine_in(),
+                    EaseFunction::SineOut => self.sine_out(),
+                    EaseFunction::SineInOut => self.sine_in_out(),
+
+                    EaseFunction::CircularIn => self.circular_in(),
+                    EaseFunction::CircularOut => self.circular_out(),
+                    EaseFunction::CircularInOut => self.circular_in_out(),
+
+                    EaseFunction::ExponentialIn => self.exponential_in(),
+                    EaseFunction::ExponentialOut => self.exponential_out(),
+                    EaseFunction::ExponentialInOut => self.exponential_in_out(),
+
+                    EaseFunction::ElasticIn => self.elastic_in(),
+                    EaseFunction::ElasticOut => self.elastic_out(),
+                    EaseFunction::ElasticInOut => self.elastic_in_out(),
+
+                    EaseFunction::BackIn => self.back_in(),
+                    EaseFunction::BackOut => self.back_out(),
+                    EaseFunction::BackInOut => self.back_in_out(),
+
+                    EaseFunction::BounceIn => self.bounce_in(),
+                    EaseFunction::BounceOut => self.bounce_out(),
+                    EaseFunction::BounceInOut => self.bounce_in_out(),
+                }
+            }
+
+            fn quadratic_in(self) -> Self {
+                let p = normalized(self);
+                p * p
+            }
+
+            fn quadratic_out(self) -> Self {
+                let p = normalized(self);
+                -(p * (p - 2.0))
+            }
+
+            fn quadratic_in_out(self) -> Self {
+                let p = normalized(self);
+                if p < 0.5 {
+                    2.0 * p * p
+                } else {
+                    (-2.0 * p * p) + (4.0 * p) - 1.0
+                }
+            }
+
+
+            fn cubic_in(self) -> Self {
+                let p = normalized(self);
+                p * p * p
+            }
+
+            fn cubic_out(self) -> Self {
+                let p = normalized(self);
+                let f = p - 1.0;
+                f * f * f + 1.0
+            }
+
+            fn cubic_in_out(self) -> Self {
+                let p = normalized(self);
+                if p < 0.5 {
+                    4.0 * p * p * p
+                } else {
+                    let f = (2.0 * p) - 2.0;
+                    0.5 * f * f * f + 1.0
+                }
+            }
+
+
+            fn quartic_in(self) -> Self {
+                let p = normalized(self);
+                p * p * p * p
+            }
+
+            fn quartic_out(self) -> Self {
+                let p = normalized(self);
+                let f = p - 1.0;
+                f * f * f * (1.0 - p) + 1.0
+            }
+
+            fn quartic_in_out(self) -> Self {
+                let p = normalized(self);
+                if p < 0.5 {
+                    8.0 * p * p * p * p
+                } else {
+                    let f = p - 1.0;
+                    -8.0 * f * f * f * f + 1.0
+                }
+            }
+
+
+            fn quintic_in(self) -> Self {
+                let p = normalized(self);
+                p * p * p * p * p
+            }
+
+            fn quintic_out(self) -> Self {
+                let p = normalized(self);
+                let f = p - 1.0;
+                f * f * f * f * f + 1.0
+            }
+
+            fn quintic_in_out(self) -> Self {
+                let p = normalized(self);
+                if p < 0.5  {
+                    16.0 * p * p * p * p * p
+                } else {
+                    let f = (2.0 * p) - 2.0;
+                    0.5 * f * f * f * f * f + 1.0
+                }
+            }
+
+
+            fn sine_in(self) -> Self {
+                use std::$T::consts::PI_2;
+                let p = normalized(self);
+                ((p - 1.0) * PI_2).sin() + 1.0
+            }
+
+            fn sine_out(self) -> Self {
+                use std::$T::consts::PI_2;
+                let p = normalized(self);
+                (p * PI_2).sin()
+            }
+
+            fn sine_in_out(self) -> Self {
+                use std::$T::consts::PI;
+                let p = normalized(self);
+                0.5 * (1.0 - (p * PI).cos())
+            }
+
+
+            fn circular_in(self) -> Self {
+                let p = normalized(self);
+                1.0 - (1.0 - (p * p)).sqrt()
+            }
+
+            fn circular_out(self) -> Self {
+                let p = normalized(self);
+                ((2.0 - p) * p).sqrt()
+            }
+
+            fn circular_in_out(self) -> Self {
+                let p = normalized(self);
+                if p < 0.5 {
+                    0.5 * (1.0 - (1.0 - 4.0 * (p * p)).sqrt())
+                } else {
+                    0.5 * ((-((2.0 * p) - 3.0) * ((2.0 * p) - 1.0)).sqrt() + 1.0)
+                }
+            }
+
+
+            fn exponential_in(self) -> Self {
+                let p = normalized(self);
+                if p == 0.0 {
+                    p
+                } else {
+                    2.0.powf(10.0 * (p - 1.0))
+                }
+            }
+
+            fn exponential_out(self) -> Self {
+                let p = normalized(self);
+                if p == 1.0 {
+                    p
+                } else {
+                    1.0 - 2.0.powf(-10.0 * p)
+                }
+            }
+
+            fn exponential_in_out(self) -> Self {
+                let p = normalized(self);
+                if p == 0.0 || p == 1.0 {
+                    return p;
+                }
+
+                if p < 0.5  {
+                    0.5 * 2.0.powf((20.0 * p) - 10.0)
+                } else {
+                    -0.5 * 2.0.powf((-20.0 * p) + 10.0) + 1.0
+                }
+            }
+
+
+            fn elastic_in(self) -> Self {
+                use std::$T::consts::PI_2;
+                let p = normalized(self);
+                (13.0 * PI_2 * p).sin() * 2.0.powf(10.0 * (p - 1.0))
+            }
+
+            fn elastic_out(self) -> Self {
+                use std::$T::consts::PI_2;
+                let p = normalized(self);
+                (-13.0 * PI_2 * (p + 1.0)).sin() * 2.0.powf(-10.0 * p) + 1.0
+            }
+
+            fn elastic_in_out(self) -> Self {
+                use std::$T::consts::PI_2;
+                let p = normalized(self);
+                if p < 0.5 {
+                    0.5 * (13.0 * PI_2 * (2.0 * p)).sin() * 2.0.powf(10.0 * ((2.0 * p) - 1.0))
+                } else {
+                    0.5 * ((-13.0 * PI_2 * ((2.0 * p - 1.0) + 1.0)).sin() * 2.0.powf(-10.0 * (2.0 * p - 1.0)) + 2.0)
+                }
+            }
+
+
+            fn back_in(self) -> Self {
+                use std::$T::consts::PI;
+                let p = normalized(self);
+                p * p * p - p * (p * PI).sin()
+            }
+
+            fn back_out(self) -> Self {
+                use std::$T::consts::PI;
+                let p = normalized(self);
+                let f = 1.0 - p;
+                1.0 - (f * f * f - f * (f * PI).sin())
+            }
+
+            fn back_in_out(self) -> Self {
+                use std::$T::consts::PI;
+                let p = normalized(self);
+                if p < 0.5 {
+                    let f = 2.0 * p;
+                    0.5 * (f * f * f - f * (f * PI).sin())
+                } else {
+                    let f = 1.0 - (2.0 * p - 1.0);
+                    0.5 * (1.0 - (f * f * f - f * (f * PI).sin())) + 0.5
+                }
+            }
+
+
+            fn bounce_in(self) -> Self {
+                let p = normalized(self);
+                1.0 - Ease::bounce_out(1.0 - p)
+            }
+
+            fn bounce_out(self) -> Self {
+                let p = normalized(self);
+                if p < 4.0 / 11.0 {
+                    (121.0 * p * p) / 16.0
+                } else if p < 8.0 / 11.0 {
+                    (363.0 / 40.0 * p * p) - (99.0 / 10.0 * p) + 17.0 / 5.0
+                } else if p < 9.0 / 10.0 {
+                    (4356.0 / 361.0 * p * p) - (35442.0 / 1805.0 * p) + 16061.0 / 1805.0
+                } else {
+                    (54.0 / 5.0 * p * p) - (513.0 / 25.0 * p) + 268.0 / 25.0
+                }
+            }
+
+            fn bounce_in_out(self) -> Self {
+                let p = normalized(self);
+                if p < 0.5 {
+                    0.5 * Ease::bounce_in(p * 2.0)
+                } else {
+                    0.5 * Ease::bounce_out(p * 2.0 - 1.0) + 0.5
+                }
+            }
         }
-    }
+    )
 }
 
+impl_ease_trait_for!(f32);
+impl_ease_trait_for!(f64);
 
-/// Applies EaseQuadraticIn function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn quadratic_in<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    p * p
-}
-
-/// Applies EaseQuadraticOut function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn quadratic_out<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _2: T = FromPrimitive::from_f64(2.0).unwrap();
-    -(p * (p - _2))
-}
-
-/// Applies EaseQuadraticInOut function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn quadratic_in_out<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _05: T = FromPrimitive::from_f64(0.5).unwrap();
-    let _2: T = FromPrimitive::from_f64(2.0).unwrap();
-    let _4: T = FromPrimitive::from_f64(4.0).unwrap();
-    let _1: T = Float::one();
-    if p < _05 {
-        p * p * _2
-    } else {
-        (-_2 * p * p) + (_4 * p) - _1
-    }
-}
-
-
-/// Applies EaseCubicIn function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn cubic_in<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    p * p * p
-}
-
-/// Applies EaseCubicOut function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn cubic_out<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _1: T = Float::one();
-    let f = p - _1;
-    f * f * f + _1
-}
-
-/// Applies EaseCubicInOut function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn cubic_in_out<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _05: T = FromPrimitive::from_f64(0.5).unwrap();
-    let _4: T = FromPrimitive::from_f64(4.0).unwrap();
-    let _2: T = FromPrimitive::from_f64(2.0).unwrap();
-    let _1: T = Float::one();
-    if p < _05 {
-        p * p * p * _4
-    } else {
-        let f = (_2 * p) - _2;
-        f * f * f * _05 + _1
-    }
-}
-
-
-/// Applies EaseQuarticIn function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn quartic_in<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    p * p * p * p
-}
-
-/// Applies EaseQuarticOut function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn quartic_out<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _1: T = Float::one();
-    let f = p - _1;
-    f * f * f * (_1 - p) + _1
-}
-
-/// Applies EaseQuarticInOut function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn quartic_in_out<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _8: T = FromPrimitive::from_f64(8.0).unwrap();
-    let _1: T = Float::one();
-    let _05: T = FromPrimitive::from_f64(0.5).unwrap();
-    if p < _05 {
-        _8 * p * p * p * p
-    } else {
-        let f = p - _1;
-        -_8 * f * f * f * f + _1
-    }
-}
-
-
-/// Applies EaseQuinticIn function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn quintic_in<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    p * p * p * p * p
-}
-
-/// Applies EaseQuinticOut function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn quintic_out<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _1: T = Float::one();
-    let f = p - _1;
-    f * f * f * f * f + _1
-}
-
-/// Applies EaseQuinticInOut function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn quintic_in_out<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _05: T = FromPrimitive::from_f64(0.5).unwrap();
-    let _16: T = FromPrimitive::from_f64(16.0).unwrap();
-    let _2: T = FromPrimitive::from_f64(2.0).unwrap();
-    let _1: T = Float::one();
-    if p < _05  {
-        p * p * p * p * p * _16
-    } else {
-        let f = (_2 * p) - _2;
-        f * f * f * f * f * _05 + _1
-    }
-}
-
-
-/// Applies EaseSineIn function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn sine_in<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _1: T = Float::one();
-    let _pi_2: T = FromPrimitive::from_f64(PI_2).unwrap();
-    ((p - _1) * _pi_2).sin() + _1
-}
-
-/// Applies EaseSineOut function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn sine_out<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _pi_2: T = FromPrimitive::from_f64(PI_2).unwrap();
-    (p * _pi_2).sin()
-}
-
-/// Applies EaseSineInOut function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn sine_in_out<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _05: T = FromPrimitive::from_f64(0.5).unwrap();
-    let _1: T = Float::one();
-    let _pi: T = FromPrimitive::from_f64(PI).unwrap();
-    _05 * (_1 - (p * _pi).cos())
-}
-
-
-/// Applies EaseCircularIn function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn circular_in<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _1: T = Float::one();
-    _1 - (_1 - (p * p)).sqrt()
-}
-
-/// Applies EaseCircularOut function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn circular_out<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _2: T = FromPrimitive::from_f64(2.0).unwrap();
-    ((_2 - p) * p).sqrt()
-}
-
-/// Applies EaseCircularInOut function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn circular_in_out<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _05: T = FromPrimitive::from_f64(0.5).unwrap();
-    let _1: T = Float::one();
-    let _4: T = FromPrimitive::from_f64(4.0).unwrap();
-    let _2: T = FromPrimitive::from_f64(2.0).unwrap();
-    let _3: T = FromPrimitive::from_f64(3.0).unwrap();
-    if p < _05 {
-        _05 * (_1 - (_1 - _4 * (p * p)).sqrt())
-    } else {
-        _05 * ((-((_2 * p) - _3) * ((_2 * p) - _1)).sqrt() + _1)
-    }
-}
-
-
-/// Applies EaseExponentialIn function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn exponential_in<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _0: T = Float::zero();
-    let _2: T = FromPrimitive::from_f64(2.0).unwrap();
-    let _10: T = FromPrimitive::from_f64(10.0).unwrap();
-    let _1: T = Float::one();
-    if p == _0 {
-        p
-    } else {
-        _2.powf(_10 * (p - _1))
-    }
-}
-
-/// Applies EaseExponentialOut function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn exponential_out<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _1: T = Float::one();
-    let _2: T = FromPrimitive::from_f64(2.0).unwrap();
-    let _10: T = FromPrimitive::from_f64(10.0).unwrap();
-    if p == _1 {
-        p
-    } else {
-        _1 - _2.powf(-_10 * p)
-    }
-}
-
-/// Applies EaseExponentialInOut function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn exponential_in_out<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _0: T = Float::one();
-    let _1: T = Float::one();
-    if p == _0 || p == _1 {
-        return p;
-    }
-
-    let _05: T = FromPrimitive::from_f64(0.5).unwrap();
-    let _2: T = FromPrimitive::from_f64(2.0).unwrap();
-    let _20: T = FromPrimitive::from_f64(20.0).unwrap();
-    let _10: T = FromPrimitive::from_f64(10.0).unwrap();
-    if p < _05  {
-        _05 * _2.powf((_20 * p) - _10)
-    } else {
-        -_05 * _2.powf((-_20 * p) + _10) + _1
-    }
-}
-
-
-/// Applies EaseElasticIn function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn elastic_in<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _13: T = FromPrimitive::from_f64(13.0).unwrap();
-    let _pi_2: T = FromPrimitive::from_f64(PI_2).unwrap();
-    let _2: T = FromPrimitive::from_f64(2.0).unwrap();
-    let _10: T = FromPrimitive::from_f64(10.0).unwrap();
-    let _1: T = Float::one();
-    (_13 * _pi_2 * p).sin() * _2.powf(_10 * (p - _1))
-}
-
-/// Applies EaseElasticOut function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn elastic_out<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _13: T = FromPrimitive::from_f64(13.0).unwrap();
-    let _10: T = FromPrimitive::from_f64(10.0).unwrap();
-    let _2: T = FromPrimitive::from_f64(2.0).unwrap();
-    let _pi_2: T = FromPrimitive::from_f64(PI_2).unwrap();
-    let _1: T = Float::one();
-    (-_13 * _pi_2 * (p + _1)).sin() * _2.powf(-_10 * p) + _1
-}
-
-/// Applies EaseElasticInOut function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn elastic_in_out<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _05: T = FromPrimitive::from_f64(0.5).unwrap();
-    let _13: T = FromPrimitive::from_f64(13.0).unwrap();
-    let _pi_2: T = FromPrimitive::from_f64(PI_2).unwrap();
-    let _2: T = FromPrimitive::from_f64(2.0).unwrap();
-    let _10: T = FromPrimitive::from_f64(10.0).unwrap();
-    let _1: T = Float::one();
-    if p < _05 {
-        _05 * (_13 * _pi_2 * (_2 * p)).sin() * _2.powf(_10 * ((_2 * p) - _1))
-    } else {
-        _05 * ((-_13 * _pi_2 * ((_2 * p - _1) + _1)).sin() * _2.powf(-_10 * (_2 * p - _1)) + _2)
-    }
-}
-
-
-/// Applies EaseBackIn function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn back_in<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _pi = FromPrimitive::from_f64(PI).unwrap();
-    p * p * p - p * (p * _pi).sin()
-}
-
-/// Applies EaseBackOut function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn back_out<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _1: T = Float::one();
-    let _pi: T = FromPrimitive::from_f64(PI).unwrap();
-    let f = _1 - p;
-    _1 - (f * f * f - f * (f * _pi).sin())
-}
-
-/// Applies EaseBackInOut function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn back_in_out<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _05: T = FromPrimitive::from_f64(0.5).unwrap();
-    let _2: T = FromPrimitive::from_f64(2.0).unwrap();
-    let _pi: T = FromPrimitive::from_f64(PI).unwrap();
-    let _1: T = Float::one();
-    if p < _05 {
-        let f = _2 * p;
-        _05 * (f * f * f - f * (f * _pi).sin())
-    } else {
-        let f = _1 - (_2 * p - _1);
-        _05 * (_1 - (f * f * f - f * (f * _pi).sin())) + _05
-    }
-}
-
-
-/// Applies EaseBounceIn function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn bounce_in<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _1: T = Float::one();
-    _1 - bounce_out(_1 - p)
-}
-
-/// Applies EaseBounceOut function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn bounce_out<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _4: T = FromPrimitive::from_f64(4.0).unwrap();
-    let _11: T = FromPrimitive::from_f64(11.0).unwrap();
-    let _121: T = FromPrimitive::from_f64(121.0).unwrap();
-    let _16: T = FromPrimitive::from_f64(16.0).unwrap();
-    let _8: T = FromPrimitive::from_f64(8.0).unwrap();
-    let _11: T = FromPrimitive::from_f64(11.0).unwrap();
-    let _363: T = FromPrimitive::from_f64(363.0).unwrap();
-    let _40: T = FromPrimitive::from_f64(40.0).unwrap();
-    let _99: T = FromPrimitive::from_f64(99.0).unwrap();
-    let _10: T = FromPrimitive::from_f64(10.0).unwrap();
-    let _17: T = FromPrimitive::from_f64(17.0).unwrap();
-    let _5: T = FromPrimitive::from_f64(5.0).unwrap();
-    let _9: T = FromPrimitive::from_f64(9.0).unwrap();
-    let _4356: T = FromPrimitive::from_f64(4356.0).unwrap();
-    let _361: T = FromPrimitive::from_f64(361.0).unwrap();
-    let _35442: T = FromPrimitive::from_f64(35442.0).unwrap();
-    let _1805: T = FromPrimitive::from_f64(1805.0).unwrap();
-    let _16061: T = FromPrimitive::from_f64(16061.0).unwrap();
-    let _54: T = FromPrimitive::from_f64(54.0).unwrap();
-    let _513: T = FromPrimitive::from_f64(513.0).unwrap();
-    let _25: T = FromPrimitive::from_f64(25.0).unwrap();
-    let _268: T = FromPrimitive::from_f64(268.0).unwrap();
-    if p < _4 / _11 {
-        (_121 * p * p) / _16
-    } else if p < _8 / _11 {
-        (_363 / _40 * p * p) - (_99 / _10 * p) + _17 / _5
-    } else if p < _9 / _10 {
-        (_4356 / _361 * p * p) - (_35442 / _1805 * p) + _16061 / _1805
-    } else {
-        (_54 / _5 * p * p) - (_513 / _25 * p) + _268 / _25
-    }
-}
-
-/// Applies EaseBounceInOut function to the input value.
-/// Value below 0.0 is interpreted as 0.0, and value above 1.0 is interpreted as 1.0.
-pub fn bounce_in_out<T>(mut p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    p = normalized(p);
-    let _05: T = FromPrimitive::from_f64(0.5).unwrap();
-    let _2: T = FromPrimitive::from_f64(2.0).unwrap();
-    let _1: T = FromPrimitive::from_f64(1.0).unwrap();
-    if p < _05 {
-        _05 * bounce_in(p * _2)
-    } else {
-        _05 * bounce_out(p * _2 - _1) + _05
-    }
-}
-
-fn normalized<T>(p: T) -> T
-    where
-        T: Float + FromPrimitive
-{
-    let _1 = Float::one();
-    let _0 = Float::zero();
-    if p > _1 {
-        _1
-    } else if p < _0 {
-        _0
+fn normalized<T: Float>(p: T) -> T {
+    if p > Float::one() {
+        Float::one()
+    } else if p < Float::zero() {
+        Float::zero()
     } else {
         p
     }

@@ -2,15 +2,15 @@
 extern crate test;
 extern crate interpolation;
 
-use interpolation::ease;
+use interpolation::Ease;
 
 macro_rules! bench_ease {
-    ($name:ident, $T:ident, $f:ident) => (
+    ($name: ident, $T: ident, $f: ident) => (
         #[bench]
         fn $name(bencher: &mut test::Bencher) {
             let values = std::iter::count(0.0, 0.1).take(11).collect::<Vec<$T>>();
             bencher.iter(|| {
-                let x = values.iter().map(|&x| ease::$f(x)).collect::<Vec<$T>>();
+                let x = values.iter().map(|&x| Ease::$f(x)).collect::<Vec<$T>>();
                 test::black_box(x);
             })
         }
