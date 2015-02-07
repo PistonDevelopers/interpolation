@@ -1,4 +1,4 @@
-#![feature(test)]
+#![feature(test, core)]
 
 extern crate test;
 extern crate interpolation;
