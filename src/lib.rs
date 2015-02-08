@@ -12,15 +12,14 @@
 //! The choice of interpolation algorithm depends often
 //! on the circumstances where it used.
 
-use std::num::Float;
-
 pub use ease::{
     Ease,
     EaseFunction,
 };
+pub use spatial::Spatial;
 
 mod ease;
-
+mod spatial;
 
 /// Performs linear interpolation.
 /// A linear interpolation consists of two states 'a' and 'b'.
@@ -29,8 +28,8 @@ mod ease;
 /// When 't' is zero then 'a' has full weight.
 /// When 't' is one then 'b' has full weight.
 #[inline(always)]
-pub fn lerp<T: Copy + Float>(a: T, b: T, t: T) -> T {
-    a + (b - a) * t
+pub fn lerp<T: Spatial>(a: &T, b: &T, t: &<T as Spatial>::Scalar) -> T {
+    a.add(&b.sub(a).scale(t))
 }
 
 /// Performs quadratic beziér interpolation.
@@ -39,15 +38,15 @@ pub fn lerp<T: Copy + Float>(a: T, b: T, t: T) -> T {
 ///
 /// <a href="http://en.wikipedia.org/wiki/B%C3%A9zier_curve">Beziér Curve at Wikipedia</a>
 #[inline(always)]
-pub fn quad_bez<T: Copy + Float>(
-    x0: T,
-    x1: T,
-    x2: T,
-    t: T
+pub fn quad_bez<T: Spatial>(
+    x0: &T,
+    x1: &T,
+    x2: &T,
+    t: &<T as Spatial>::Scalar
 ) -> T {
     let x_0_1 = lerp(x0, x1, t);
     let x_1_2 = lerp(x1, x2, t);
-    lerp(x_0_1, x_1_2, t)
+    lerp(&x_0_1, &x_1_2, t)
 }
 
 /// Performs cubic beziér interpolation.
@@ -56,15 +55,14 @@ pub fn quad_bez<T: Copy + Float>(
 ///
 /// <a href="http://en.wikipedia.org/wiki/B%C3%A9zier_curve">Beziér Curve at Wikipedia</a>
 #[inline(always)]
-pub fn cub_bez<T: Copy + Float>(
-    x0: T,
-    x1: T,
-    x2: T,
-    x3: T,
-    t: T
+pub fn cub_bez<T: Spatial>(
+    x0: &T,
+    x1: &T,
+    x2: &T,
+    x3: &T,
+    t: &<T as Spatial>::Scalar
 ) -> T {
     let x_0_2 = quad_bez(x0, x1, x2, t);
     let x_1_3 = quad_bez(x1, x2, x3, t);
-    lerp(x_0_2, x_1_3, t)
+    lerp(&x_0_2, &x_1_3, t)
 }
-
