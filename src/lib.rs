@@ -1,5 +1,5 @@
 #![deny(missing_docs)]
-#![feature(std_misc)]
+#![feature(std_misc, core)]
 
 //! Interpolation algorithms.
 //!
