@@ -37,6 +37,74 @@ impl<T> Spatial for T
     }
 }
 
+
+/// Implementation of spatial for signed integers.
+/// `scale` will cast the uint to the Scalar before multiplying and rounding to the nearest value.
+macro_rules! impl_spatial_for_int {
+    ($int: ident, $scalar: ident) => (
+        impl Spatial for $int {
+            type Scalar = $scalar;
+
+            #[inline(always)]
+            fn add(&self, other: &$int) -> $int {
+                *self + *other
+            }
+
+            #[inline(always)]
+            fn sub(&self, other: &$int) -> $int {
+                *self - *other
+            }
+
+            #[inline(always)]
+            fn scale(&self, other: &$scalar) -> $int {
+                use std::num::Float;
+                ((*self as $scalar) * *other).round() as $int
+            }
+        }
+    )
+}
+
+impl_spatial_for_int!(i8,  f32);
+impl_spatial_for_int!(i16, f32);
+impl_spatial_for_int!(i32, f32);
+impl_spatial_for_int!(i64, f64);
+
+/// Implementation of spatial for unsigned integers.
+/// `scale` will cast the uint to the Scalar before multiplying and rounding to the nearest value.
+macro_rules! impl_spatial_for_uint {
+    ($uint: ident, $scalar: ident) => (
+        impl Spatial for $uint {
+            type Scalar = $scalar;
+
+            #[inline(always)]
+            fn add(&self, other: &$uint) -> $uint {
+                *self + *other
+            }
+
+            #[inline(always)]
+            fn sub(&self, other: &$uint) -> $uint {
+                // Find the absolute difference to avoid underflow.
+                if *self >= *other {
+                    *self - *other
+                } else {
+                    *other - *self
+                }
+            }
+
+            #[inline(always)]
+            fn scale(&self, other: &$scalar) -> $uint {
+                use std::num::Float;
+                ((*self as $scalar) * *other).round() as $uint
+            }
+        }
+    )
+}
+
+impl_spatial_for_uint!(u8,  f32);
+impl_spatial_for_uint!(u16, f32);
+impl_spatial_for_uint!(u32, f32);
+impl_spatial_for_uint!(u64, f64);
+
 impl<T> Spatial for [T; 2]
     where
         T: Spatial
