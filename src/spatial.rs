@@ -1,7 +1,5 @@
 //! A trait to allow interpolation over spatial structures.
 
-use std::num::Float;
-
 /// Used for interpolation over spatial structures.
 pub trait Spatial {
     /// The scalar type.
@@ -15,31 +13,35 @@ pub trait Spatial {
     fn scale(&self, scalar: &<Self as Spatial>::Scalar) -> Self;
 }
 
-impl<T> Spatial for T
-    where
-        T: Float
-{
-    type Scalar = T;
+/// Implementation of spatial for floats.
+macro_rules! impl_spatial_for_float {
+    ($float: ident) => (
+        impl Spatial for $float {
+            type Scalar = $float;
 
-    #[inline(always)]
-    fn add(&self, other: &Self) -> Self {
-        *self + *other
-    }
+            #[inline(always)]
+            fn add(&self, other: &$float) -> $float {
+                *self + *other
+            }
 
-    #[inline(always)]
-    fn sub(&self, other: &Self) -> Self {
-        *self - *other
-    }
+            #[inline(always)]
+            fn sub(&self, other: &$float) -> $float {
+                *self - *other
+            }
 
-    #[inline(always)]
-    fn scale(&self, other: &<Self as Spatial>::Scalar) -> Self {
-        *self * *other
-    }
+            #[inline(always)]
+            fn scale(&self, other: &$float) -> $float {
+                *self * *other
+            }
+        }
+    )
 }
 
+impl_spatial_for_float!(f32);
+impl_spatial_for_float!(f64);
 
 /// Implementation of spatial for signed integers.
-/// `scale` will cast the uint to the Scalar before multiplying and rounding to the nearest value.
+/// `scale` will cast the int to the Scalar before multiplying and rounding to the nearest value.
 macro_rules! impl_spatial_for_int {
     ($int: ident, $scalar: ident) => (
         impl Spatial for $int {
@@ -57,7 +59,6 @@ macro_rules! impl_spatial_for_int {
 
             #[inline(always)]
             fn scale(&self, other: &$scalar) -> $int {
-                use std::num::Float;
                 ((*self as $scalar) * *other).round() as $int
             }
         }
@@ -93,7 +94,6 @@ macro_rules! impl_spatial_for_uint {
 
             #[inline(always)]
             fn scale(&self, other: &$scalar) -> $uint {
-                use std::num::Float;
                 ((*self as $scalar) * *other).round() as $uint
             }
         }
