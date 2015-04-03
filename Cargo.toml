@@ -22,3 +22,7 @@ homepage = "https://github.com/pistondevelopers/interpolation"
 
 name = "interpolation"
 path = "./src/lib.rs"
+
+[dependencies]
+
+num = "0.1"
