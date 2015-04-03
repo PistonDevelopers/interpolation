@@ -1,5 +1,4 @@
 #![deny(missing_docs)]
-#![feature(std_misc, core)]
 
 //! Interpolation algorithms.
 //!
@@ -12,10 +11,7 @@
 //! The choice of interpolation algorithm depends often
 //! on the circumstances where it used.
 
-pub use ease::{
-    Ease,
-    EaseFunction,
-};
+pub use ease::{ Ease, EaseFunction };
 pub use spatial::Spatial;
 
 mod ease;

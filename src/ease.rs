@@ -1,9 +1,8 @@
-
 //! A module contains implementation of ease functions.
 
-use std::num::{
-    Float,
-};
+extern crate num;
+
+use self::num::Float;
 
 #[allow(missing_docs)]
 #[derive(Copy, Clone, PartialEq)]
@@ -97,6 +96,7 @@ pub trait Ease {
 
 macro_rules! impl_ease_trait_for {
     ($T: ident) => (
+        mod $T { pub const PI_2: $T = 6.28318530717958647692528676655900576; }
         impl Ease for $T {
             fn calc(self, f: EaseFunction) -> Self {
                 match f {
@@ -229,13 +229,13 @@ macro_rules! impl_ease_trait_for {
 
 
             fn sine_in(self) -> Self {
-                use std::$T::consts::PI_2;
+                use self::$T::PI_2;
                 let p = clamp(self);
                 ((p - 1.0) * PI_2).sin() + 1.0
             }
 
             fn sine_out(self) -> Self {
-                use std::$T::consts::PI_2;
+                use self::$T::PI_2;
                 let p = clamp(self);
                 (p * PI_2).sin()
             }
@@ -300,24 +300,25 @@ macro_rules! impl_ease_trait_for {
 
 
             fn elastic_in(self) -> Self {
-                use std::$T::consts::PI_2;
+                use self::$T::PI_2;
                 let p = clamp(self);
                 (13.0 * PI_2 * p).sin() * 2.0.powf(10.0 * (p - 1.0))
             }
 
             fn elastic_out(self) -> Self {
-                use std::$T::consts::PI_2;
+                use self::$T::PI_2;
                 let p = clamp(self);
                 (-13.0 * PI_2 * (p + 1.0)).sin() * 2.0.powf(-10.0 * p) + 1.0
             }
 
             fn elastic_in_out(self) -> Self {
-                use std::$T::consts::PI_2;
+                use self::$T::PI_2;
                 let p = clamp(self);
                 if p < 0.5 {
                     0.5 * (13.0 * PI_2 * (2.0 * p)).sin() * 2.0.powf(10.0 * ((2.0 * p) - 1.0))
                 } else {
-                    0.5 * ((-13.0 * PI_2 * ((2.0 * p - 1.0) + 1.0)).sin() * 2.0.powf(-10.0 * (2.0 * p - 1.0)) + 2.0)
+                    0.5 * ((-13.0 * PI_2 * ((2.0 * p - 1.0) + 1.0)).sin()
+                           * 2.0.powf(-10.0 * (2.0 * p - 1.0)) + 2.0)
                 }
             }
 
@@ -382,10 +383,10 @@ impl_ease_trait_for!(f32);
 impl_ease_trait_for!(f64);
 
 fn clamp<T: Float>(p: T) -> T {
-    if p > Float::one() {
-        Float::one()
-    } else if p < Float::zero() {
-        Float::zero()
+    if p > T::one() {
+        T::one()
+    } else if p < T::zero() {
+        T::zero()
     } else {
         p
     }
