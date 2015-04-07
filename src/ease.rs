@@ -1,9 +1,5 @@
 //! A module contains implementation of ease functions.
 
-extern crate num;
-
-use self::num::Float;
-
 #[allow(missing_docs)]
 #[derive(Copy, Clone, PartialEq)]
 pub enum EaseFunction {
@@ -96,7 +92,17 @@ pub trait Ease {
 
 macro_rules! impl_ease_trait_for {
     ($T: ident) => (
-        mod $T { pub const PI_2: $T = 6.28318530717958647692528676655900576; }
+        mod $T {
+            pub const PI_2: $T = 6.28318530717958647692528676655900576;
+
+            pub fn clamp(p: $T) -> $T {
+                match () {
+                    _ if p > 1.0 => 1.0,
+                    _ if p < 0.0 => 0.0,
+                    _ => p
+                }
+            }
+        }
         impl Ease for $T {
             fn calc(self, f: EaseFunction) -> Self {
                 match f {
@@ -143,17 +149,17 @@ macro_rules! impl_ease_trait_for {
             }
 
             fn quadratic_in(self) -> Self {
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 p * p
             }
 
             fn quadratic_out(self) -> Self {
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 -(p * (p - 2.0))
             }
 
             fn quadratic_in_out(self) -> Self {
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 if p < 0.5 {
                     2.0 * p * p
                 } else {
@@ -163,18 +169,18 @@ macro_rules! impl_ease_trait_for {
 
 
             fn cubic_in(self) -> Self {
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 p * p * p
             }
 
             fn cubic_out(self) -> Self {
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 let f = p - 1.0;
                 f * f * f + 1.0
             }
 
             fn cubic_in_out(self) -> Self {
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 if p < 0.5 {
                     4.0 * p * p * p
                 } else {
@@ -185,18 +191,18 @@ macro_rules! impl_ease_trait_for {
 
 
             fn quartic_in(self) -> Self {
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 p * p * p * p
             }
 
             fn quartic_out(self) -> Self {
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 let f = p - 1.0;
                 f * f * f * (1.0 - p) + 1.0
             }
 
             fn quartic_in_out(self) -> Self {
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 if p < 0.5 {
                     8.0 * p * p * p * p
                 } else {
@@ -207,18 +213,18 @@ macro_rules! impl_ease_trait_for {
 
 
             fn quintic_in(self) -> Self {
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 p * p * p * p * p
             }
 
             fn quintic_out(self) -> Self {
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 let f = p - 1.0;
                 f * f * f * f * f + 1.0
             }
 
             fn quintic_in_out(self) -> Self {
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 if p < 0.5  {
                     16.0 * p * p * p * p * p
                 } else {
@@ -230,35 +236,35 @@ macro_rules! impl_ease_trait_for {
 
             fn sine_in(self) -> Self {
                 use self::$T::PI_2;
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 ((p - 1.0) * PI_2).sin() + 1.0
             }
 
             fn sine_out(self) -> Self {
                 use self::$T::PI_2;
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 (p * PI_2).sin()
             }
 
             fn sine_in_out(self) -> Self {
                 use std::$T::consts::PI;
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 0.5 * (1.0 - (p * PI).cos())
             }
 
 
             fn circular_in(self) -> Self {
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 1.0 - (1.0 - (p * p)).sqrt()
             }
 
             fn circular_out(self) -> Self {
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 ((2.0 - p) * p).sqrt()
             }
 
             fn circular_in_out(self) -> Self {
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 if p < 0.5 {
                     0.5 * (1.0 - (1.0 - 4.0 * (p * p)).sqrt())
                 } else {
@@ -268,77 +274,77 @@ macro_rules! impl_ease_trait_for {
 
 
             fn exponential_in(self) -> Self {
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 if p == 0.0 {
                     p
                 } else {
-                    2.0.powf(10.0 * (p - 1.0))
+                    (2.0 as $T).powf(10.0 * (p - 1.0))
                 }
             }
 
             fn exponential_out(self) -> Self {
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 if p == 1.0 {
                     p
                 } else {
-                    1.0 - 2.0.powf(-10.0 * p)
+                    1.0 - (2.0 as $T).powf(-10.0 * p)
                 }
             }
 
             fn exponential_in_out(self) -> Self {
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 if p == 0.0 || p == 1.0 {
                     return p;
                 }
 
                 if p < 0.5  {
-                    0.5 * 2.0.powf((20.0 * p) - 10.0)
+                    0.5 * (2.0 as $T).powf((20.0 * p) - 10.0)
                 } else {
-                    -0.5 * 2.0.powf((-20.0 * p) + 10.0) + 1.0
+                    -0.5 * (2.0 as $T).powf((-20.0 * p) + 10.0) + 1.0
                 }
             }
 
 
             fn elastic_in(self) -> Self {
                 use self::$T::PI_2;
-                let p = clamp(self);
-                (13.0 * PI_2 * p).sin() * 2.0.powf(10.0 * (p - 1.0))
+                let p = $T::clamp(self);
+                (13.0 * PI_2 * p).sin() * (2.0 as $T).powf(10.0 * (p - 1.0))
             }
 
             fn elastic_out(self) -> Self {
                 use self::$T::PI_2;
-                let p = clamp(self);
-                (-13.0 * PI_2 * (p + 1.0)).sin() * 2.0.powf(-10.0 * p) + 1.0
+                let p = $T::clamp(self);
+                (-13.0 * PI_2 * (p + 1.0)).sin() * (2.0 as $T).powf(-10.0 * p) + 1.0
             }
 
             fn elastic_in_out(self) -> Self {
                 use self::$T::PI_2;
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 if p < 0.5 {
-                    0.5 * (13.0 * PI_2 * (2.0 * p)).sin() * 2.0.powf(10.0 * ((2.0 * p) - 1.0))
+                    0.5 * (13.0 * PI_2 * (2.0 * p)).sin() * (2.0 as $T).powf(10.0 * ((2.0 * p) - 1.0))
                 } else {
                     0.5 * ((-13.0 * PI_2 * ((2.0 * p - 1.0) + 1.0)).sin()
-                           * 2.0.powf(-10.0 * (2.0 * p - 1.0)) + 2.0)
+                           * (2.0 as $T).powf(-10.0 * (2.0 * p - 1.0)) + 2.0)
                 }
             }
 
 
             fn back_in(self) -> Self {
                 use std::$T::consts::PI;
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 p * p * p - p * (p * PI).sin()
             }
 
             fn back_out(self) -> Self {
                 use std::$T::consts::PI;
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 let f = 1.0 - p;
                 1.0 - (f * f * f - f * (f * PI).sin())
             }
 
             fn back_in_out(self) -> Self {
                 use std::$T::consts::PI;
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 if p < 0.5 {
                     let f = 2.0 * p;
                     0.5 * (f * f * f - f * (f * PI).sin())
@@ -350,12 +356,12 @@ macro_rules! impl_ease_trait_for {
 
 
             fn bounce_in(self) -> Self {
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 1.0 - Ease::bounce_out(1.0 - p)
             }
 
             fn bounce_out(self) -> Self {
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 if p < 4.0 / 11.0 {
                     (121.0 * p * p) / 16.0
                 } else if p < 8.0 / 11.0 {
@@ -368,7 +374,7 @@ macro_rules! impl_ease_trait_for {
             }
 
             fn bounce_in_out(self) -> Self {
-                let p = clamp(self);
+                let p = $T::clamp(self);
                 if p < 0.5 {
                     0.5 * Ease::bounce_in(p * 2.0)
                 } else {
@@ -381,13 +387,3 @@ macro_rules! impl_ease_trait_for {
 
 impl_ease_trait_for!(f32);
 impl_ease_trait_for!(f64);
-
-fn clamp<T: Float>(p: T) -> T {
-    if p > T::one() {
-        T::one()
-    } else if p < T::zero() {
-        T::zero()
-    } else {
-        p
-    }
-}
