@@ -10,7 +10,7 @@ pub trait Spatial {
     /// Subtract
     fn sub(&self, other: &Self) -> Self;
     /// Scales with a scalar.
-    fn scale(&self, scalar: &<Self as Spatial>::Scalar) -> Self;
+    fn scale(&self, scalar: &Self::Scalar) -> Self;
 }
 
 /// Implementation of spatial for floats.
@@ -109,7 +109,7 @@ impl<T> Spatial for [T; 2]
     where
         T: Spatial
 {
-    type Scalar = <T as Spatial>::Scalar;
+    type Scalar = T::Scalar;
 
     #[inline(always)]
     fn add(&self, other: &Self) -> Self {
@@ -128,7 +128,7 @@ impl<T> Spatial for [T; 2]
     }
 
     #[inline(always)]
-    fn scale(&self, scalar: &<Self as Spatial>::Scalar) -> Self {
+    fn scale(&self, scalar: &Self::Scalar) -> Self {
         [
             self[0].scale(scalar),
             self[1].scale(scalar),
@@ -140,7 +140,7 @@ impl<T> Spatial for [T; 3]
     where
         T: Spatial
 {
-    type Scalar = <T as Spatial>::Scalar;
+    type Scalar = T::Scalar;
 
     #[inline(always)]
     fn add(&self, other: &Self) -> Self {
@@ -161,7 +161,7 @@ impl<T> Spatial for [T; 3]
     }
 
     #[inline(always)]
-    fn scale(&self, scalar: &<Self as Spatial>::Scalar) -> Self {
+    fn scale(&self, scalar: &Self::Scalar) -> Self {
         [
             self[0].scale(scalar),
             self[1].scale(scalar),
@@ -174,7 +174,7 @@ impl<T> Spatial for [T; 4]
     where
         T: Spatial
 {
-    type Scalar = <T as Spatial>::Scalar;
+    type Scalar = T::Scalar;
 
     #[inline(always)]
     fn add(&self, other: &Self) -> Self {
@@ -197,7 +197,7 @@ impl<T> Spatial for [T; 4]
     }
 
     #[inline(always)]
-    fn scale(&self, scalar: &<Self as Spatial>::Scalar) -> Self {
+    fn scale(&self, scalar: &Self::Scalar) -> Self {
         [
             self[0].scale(scalar),
             self[1].scale(scalar),

@@ -24,7 +24,7 @@ mod spatial;
 /// When 't' is zero then 'a' has full weight.
 /// When 't' is one then 'b' has full weight.
 #[inline(always)]
-pub fn lerp<T: Spatial>(a: &T, b: &T, t: &<T as Spatial>::Scalar) -> T {
+pub fn lerp<T: Spatial>(a: &T, b: &T, t: &T::Scalar) -> T {
     a.add(&b.sub(a).scale(t))
 }
 
@@ -38,7 +38,7 @@ pub fn quad_bez<T: Spatial>(
     x0: &T,
     x1: &T,
     x2: &T,
-    t: &<T as Spatial>::Scalar
+    t: &T::Scalar
 ) -> T {
     let x_0_1 = lerp(x0, x1, t);
     let x_1_2 = lerp(x1, x2, t);
@@ -56,7 +56,7 @@ pub fn cub_bez<T: Spatial>(
     x1: &T,
     x2: &T,
     x3: &T,
-    t: &<T as Spatial>::Scalar
+    t: &T::Scalar
 ) -> T {
     let x_0_2 = quad_bez(x0, x1, x2, t);
     let x_1_3 = quad_bez(x1, x2, x3, t);
