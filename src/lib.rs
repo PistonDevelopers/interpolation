@@ -6,7 +6,7 @@
 //! to describe smooth shapes and to make transitions.
 //! Any object that fullfill certain mathematical
 //! properties can be interpolated.
-//! A common technique is using one ore more 'numbers'
+//! A common technique is using one or more 'numbers'
 //! controlling the mixture of states.
 //! The choice of interpolation algorithm depends often
 //! on the circumstances where it used.
