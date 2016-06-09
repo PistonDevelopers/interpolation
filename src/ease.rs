@@ -274,33 +274,33 @@ macro_rules! impl_ease_trait_for {
 
 
             fn exponential_in(self) -> Self {
-                let p = $T::clamp(self);
-                if p == 0.0 {
-                    p
+                if self <= 0.0 {
+                    0.0
                 } else {
-                    (2.0 as $T).powf(10.0 * (p - 1.0))
+                    (2.0 as $T).powf(10.0 * (self.min(1.0) - 1.0))
                 }
             }
 
             fn exponential_out(self) -> Self {
-                let p = $T::clamp(self);
-                if p == 1.0 {
-                    p
+                if self >= 1.0 {
+                    1.0
                 } else {
-                    1.0 - (2.0 as $T).powf(-10.0 * p)
+                    1.0 - (2.0 as $T).powf(-10.0 * self.max(0.0))
                 }
             }
 
             fn exponential_in_out(self) -> Self {
-                let p = $T::clamp(self);
-                if p == 0.0 || p == 1.0 {
-                    return p;
+                if self <= 0.0 {
+                    return 0.0;
+                }
+                if self >= 1.0 {
+                    return 1.0;
                 }
 
-                if p < 0.5  {
-                    0.5 * (2.0 as $T).powf((20.0 * p) - 10.0)
+                if self < 0.5  {
+                    0.5 * (2.0 as $T).powf((20.0 * self) - 10.0)
                 } else {
-                    -0.5 * (2.0 as $T).powf((-20.0 * p) + 10.0) + 1.0
+                    -0.5 * (2.0 as $T).powf((-20.0 * self) + 10.0) + 1.0
                 }
             }
 
