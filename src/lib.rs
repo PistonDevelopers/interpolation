@@ -32,7 +32,7 @@ pub fn lerp<T: Spatial>(a: &T, b: &T, t: &T::Scalar) -> T {
 /// This is done by nesting linear interpolations.
 /// For more information, see:
 ///
-/// <a href="http://en.wikipedia.org/wiki/B%C3%A9zier_curve">Beziér Curve at Wikipedia</a>
+/// [Beziér Curve at Wikipedia](http://en.wikipedia.org/wiki/B%C3%A9zier_curve)
 #[inline(always)]
 pub fn quad_bez<T: Spatial>(
     x0: &T,
@@ -49,7 +49,7 @@ pub fn quad_bez<T: Spatial>(
 /// This is done by interpolation between two quadratic beziér.
 /// For more information, see:
 ///
-/// <a href="http://en.wikipedia.org/wiki/B%C3%A9zier_curve">Beziér Curve at Wikipedia</a>
+/// [Beziér Curve at Wikipedia](http://en.wikipedia.org/wiki/B%C3%A9zier_curve)
 #[inline(always)]
 pub fn cub_bez<T: Spatial>(
     x0: &T,
