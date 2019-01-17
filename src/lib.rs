@@ -12,21 +12,10 @@
 //! on the circumstances where it used.
 
 pub use ease::{ Ease, EaseFunction };
-pub use spatial::Spatial;
+pub use lerp::{lerp, Lerp};
 
 mod ease;
-mod spatial;
-
-/// Performs linear interpolation.
-/// A linear interpolation consists of two states 'a' and 'b'.
-/// The 't' variable is a factor between 0 and 1 that
-/// gives weight to 'a' or 'b'.
-/// When 't' is zero then 'a' has full weight.
-/// When 't' is one then 'b' has full weight.
-#[inline(always)]
-pub fn lerp<T: Spatial>(a: &T, b: &T, t: &T::Scalar) -> T {
-    a.add(&b.sub(a).scale(t))
-}
+mod lerp;
 
 /// Performs quadratic beziér interpolation.
 /// This is done by nesting linear interpolations.
@@ -34,7 +23,7 @@ pub fn lerp<T: Spatial>(a: &T, b: &T, t: &T::Scalar) -> T {
 ///
 /// [Beziér Curve at Wikipedia](http://en.wikipedia.org/wiki/B%C3%A9zier_curve)
 #[inline(always)]
-pub fn quad_bez<T: Spatial>(
+pub fn quad_bez<T: Lerp>(
     x0: &T,
     x1: &T,
     x2: &T,
@@ -51,7 +40,7 @@ pub fn quad_bez<T: Spatial>(
 ///
 /// [Beziér Curve at Wikipedia](http://en.wikipedia.org/wiki/B%C3%A9zier_curve)
 #[inline(always)]
-pub fn cub_bez<T: Spatial>(
+pub fn cub_bez<T: Lerp>(
     x0: &T,
     x1: &T,
     x2: &T,
