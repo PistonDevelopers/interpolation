@@ -1,7 +1,7 @@
 //! A module contains implementation of ease functions.
 
 #[allow(missing_docs)]
-#[derive(Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum EaseFunction {
     QuadraticIn,
     QuadraticOut,
